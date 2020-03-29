@@ -7,11 +7,17 @@ class FullPost extends Component {
     state={
         loadedPost:null
     }
+    deletePostHandler=()=>{
+            axios.delete('/posts/'+this.props.id)
+                 .then(response=>{
+                    console.log(response);
+                 });
+    }
     componentDidUpdate(){
         if(this.props.id){
             if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id!==this.props.id)){
                 //if a post is not loaded initially or  a post is loaded and its id is not equal to the id we selected(in case of selecting other post) only then request will be sent to server
-                axios.get('https://jsonplaceholder.typicode.com/posts/'+this.props.id)  //fetching data is asynchronus it doesnt depend on rendering of jsx code
+                axios.get('/posts/'+this.props.id)  //fetching data is asynchronus it doesnt depend on rendering of jsx code
                     .then(response=>{
                         this.setState({loadedPost:response.data});
                         console.log(response);
@@ -33,7 +39,7 @@ class FullPost extends Component {
                     <h1>{this.state.loadedPost.title}</h1>
                     <p>{this.state.loadedPost.body}</p>
                     <div className="Edit">
-                        <button className="Delete">Delete</button>
+                        <button className="Delete" onClick={this.deletePostHandler}>Delete</button>
                     </div>
                 </div>
 
