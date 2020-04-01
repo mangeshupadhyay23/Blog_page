@@ -1,65 +1,38 @@
 import React, { Component } from 'react';
 //import axios from 'axios';
-import axios from "../../axios";
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
+import {Route,NavLink} from 'react-router-dom';
+
+import Posts from './Posts/Posts';
+import NewPost from './NewPost/NewPost';
 import './Blog.css';
 
 class Blog extends Component {
-    state={
-        posts:[],
-        selectedPostId:null,
-        error:false
-    }
-    componentDidMount(){
-        axios.get('/posts') //axios get the response from server 
-             .then(response=>{ 
-                    const posts=response.data.slice(0,4);  // took 4 entries out of array of data coming
-                    const updatedPosts=posts.map(post=>{
-                        return{
-                            ...post,                      //made a loop for extracting every element of array posts one by one and giving the properties to post and returning a post element containing all properties of post and an added property of author and  adding it the to the array updated post and then one by one elements of that array are taken and entered in post component
-                            author:'Max'
-                        };
-                    })
-                    this.setState({posts:updatedPosts});                                 //since our jsx file cant wait for sever to send data and all so we use a 
-                    console.log(response);                      //a
-             })
-             .catch(error=>{
-                this.setState({error:true});
-            
-             });
-
-             //this.setState is not defined here cause we do not wait for response so this.setState may not work if data isnt retrieved
-    }
+    
+    
 
 
-    postSelectedHandler=(id)=>{
-        this.setState({selectedPostId:id});
-    }
+   
     render () {
-        let posts=<p style={{textAlign:'center'}}>SOMETHING WENT WRONG</p>
-        if(this.state.error===false){
-         posts=this.state.posts.map(
-            post=>{
-                return <Post 
-                key={post.id}
-                title={post.title} 
-                author={post.author}
-                clicked={()=>this.postSelectedHandler(post.id)}/>;
-            }
-        )};
+        
         return (
-            <div>
-                <section className="Posts">
-                   {posts}
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostId} />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
+            <div className='Blog'>
+                <header>
+                    <nav>
+                        <ul>
+                            <li><NavLink to='/' exact >Home</NavLink></li>  exact has to be added or the css will be applied when the link is not exact as well
+                            <li><NavLink to={{
+                                pathname:'/new-post', //absolute path : https://blogpage/home/new-post   relative path: /new-post // to always make it an absolute path
+                                hash:'#submit',
+                                search:'?quick-submit=true'
+                            }}>New Post</NavLink></li>
+                        </ul>
+                    </nav>
+                </header>
+                {/* <Route path="/" exact render={()=>(<h1>Home</h1>)}/> exact stands for exact match so when the link will be exactly same as defined path only then it will be shown */}
+               {/* <Route path="/"  render={()=>(<h1>Home2</h1>)}/> this will be shown only when the path will be the current path as written in path attribute */}
+            
+                <Route path='/' exact component={Posts}/>   {/*  But this will u will reload ur application every time u click and hence lose ur previous data so we just want to re render the application not reload the app */}
+                <Route path='/new-post' exact component={NewPost}/>
             </div>
         );
     }
