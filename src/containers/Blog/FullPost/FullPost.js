@@ -13,11 +13,12 @@ class FullPost extends Component {
                     console.log(response);
                  });
     }
-    componentDidUpdate(){
-        if(this.props.id){
+    componentDidMount(){
+        console.log(this.props);
+        if(this.props.match.params.id){
             if(!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id!==this.props.id)){
                 //if a post is not loaded initially or  a post is loaded and its id is not equal to the id we selected(in case of selecting other post) only then request will be sent to server
-                axios.get('/posts/'+this.props.id)  //fetching data is asynchronus it doesnt depend on rendering of jsx code
+                axios.get('/posts/'+this.props.match.params.id)  //fetching data is asynchronus it doesnt depend on rendering of jsx code
                     .then(response=>{
                         this.setState({loadedPost:response.data});
                         console.log(response);
@@ -27,7 +28,7 @@ class FullPost extends Component {
     }
     render () {
         let post = <p style={{textAlign:'center'}}>Please select a Post!</p>;
-        if(this.props.id) {
+        if(this.props.match.params.id) {
             post = <p style={{textAlign:'center'}}>Loading....</p>; // till when the data is not loaded from server this will be shown 
         }//if props.id is  null or zero which it is initially then the full post will not be shown
         if(this.state.loadedPost) {

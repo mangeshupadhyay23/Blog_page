@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from '../../../axios';
-
+import {Route} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Post from '../../../components/Post/Post';
 import  './Posts.css';
 
@@ -44,20 +45,25 @@ class Posts extends React.Component{
         if(this.state.error===false){
          posts=this.state.posts.map(
             post=>{
-                return <Post        // properties of posts due to routing will not be passed down to post for that we need to pass it 
-                key={post.id}
+                return(
+                <Link to={'/'+post.id} key={post.id}> <Post        // properties of posts due to routing will not be passed down to post for that we need to pass it 
+            
                 title={post.title} 
                 //{...this.props} when u want to pass all props
                 //match={this.props.match} when only one prop has to be passed or else u can use import {withRouter} from react router dom HOC
                 author={post.author}
-                clicked={()=>this.postSelectedHandler(post.id)}/>;
+                clicked={()=>this.postSelectedHandler(post.id)}/>
+                </Link>);
             }
         )};
     
-    return(
+    return(     
+            <div>
                 <section className="Posts">
-                   {posts}
+                   {posts}                  
                 </section>
+                <Route path='/posts/:id' exact component={Post}/> {/*or use a lil diff path that is '/post/:id' */}
+            </div>
         );    
     }
 }
