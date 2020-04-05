@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import './NewPost.css';
-import axios from 'axios';
 
 class NewPost extends Component {
     state = {
@@ -10,24 +10,20 @@ class NewPost extends Component {
         author: 'Max'
     }
 
-    componentDidMount(){
+    componentDidMount () {
         console.log(this.props);
     }
 
-    postDataHandler=()=>{
-        const data={
-            title:this.state.title,
-            content:this.state.content,
-            author:this.state.author
-        }
-        axios.post('/posts',data)    //asynchronous
-            .then(response=>{
+    postDataHandler = () => {
+        const data = {
+            title: this.state.title,
+            body: this.state.content,
+            author: this.state.author
+        };
+        axios.post('/posts', data)
+            .then(response => {
                 console.log(response);
-            })
-            .catch(error=>{
-                console.log(error);
             });
-
     }
 
     render () {
