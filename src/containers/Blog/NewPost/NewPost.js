@@ -1,34 +1,46 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
+import {Redirect} from "react-router-dom";
 import './NewPost.css';
+import axios from 'axios';
 
 class NewPost extends Component {
     state = {
         title: '',
         content: '',
-        author: 'Max'
+        author: 'Max',
+        submitted:false
     }
 
-    componentDidMount () {
+    componentDidMount(){
         console.log(this.props);
     }
 
-    postDataHandler = () => {
-        const data = {
-            title: this.state.title,
-            body: this.state.content,
-            author: this.state.author
-        };
-        axios.post('/posts', data)
-            .then(response => {
+    postDataHandler=()=>{
+        const data={
+            title:this.state.title,
+            content:this.state.content,
+            author:this.state.author
+        }
+        axios.post('/posts',data)    //asynchronous
+            .then(response=>{
                 console.log(response);
+                this.props.history.push('/posts');
+               // this.setState({submitted:true});
+            })
+            .catch(error=>{
+                console.log(error);
             });
+
     }
 
     render () {
+        let redirect=null;
+            if(this.state.submitted){
+                redirect=<Redirect to='/posts'/>
+            }
         return (
             <div className="NewPost">
+                {redirect}
                 <h1>Add a Post</h1>
                 <label>Title</label>
                 <input type="text" value={this.state.title} onChange={(event) => this.setState({title: event.target.value})} />
